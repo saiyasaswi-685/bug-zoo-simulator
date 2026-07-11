@@ -1,8 +1,4 @@
-I completely understand. The Markdown blocks within Markdown were making the UI glitch and cut off the file early.
 
-To fix this once and for all, I am providing the full text inside a clean text box without nested blocks. Click the copy button in the top corner of the box below, paste it directly into your `README.md`, and it will work perfectly on GitHub.
-
-```text
 # Bug Zoo Simulator API
 
 A high-performance Bug Zoo Simulation Engine and REST API designed with a strict focus on modern production observability pillars: structured JSON logging, request tracing, and Prometheus metrics. Built using Node.js, TypeScript, Express, and SQLite.
