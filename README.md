@@ -1,5 +1,3 @@
-
-
 ```markdown
 # Bug Zoo Simulator API
 
@@ -13,7 +11,7 @@ A high-performance Bug Zoo Simulation Engine and REST API designed with a strict
 Every log line printed by the application (including startup sequences, simulator ticks, HTTP access logs, and system exceptions) is written strictly to `stdout` or `stderr` as a single line of valid, parsable JSON. No plain text output exists. 
 
 Logs follow this baseline structure:
-```json
+<pre><code class="language-json">
 {
   "timestamp": "2026-07-11T14:00:01.498Z",
   "level": "info",
@@ -23,17 +21,14 @@ Logs follow this baseline structure:
   "animal": "Lion",
   "severity": "INFO"
 }
-
-```
+</code></pre>
 
 ### 2. Request Tracing
-
 Each incoming HTTP request intercepts a newly generated UUID v4 assigned as `trace_id`. The tracing middleware is registered **first**, ahead of the JSON body parser and every other middleware. This ensures that even requests failing body parsing (e.g., malformed JSON payloads) receive a trace ID and an `X-Trace-Id` header on their error responses.
 
 * **Header Propagation**: The API returns the trace ID in the `X-Trace-Id` HTTP response header.
 * **Context Preservation**: Using Node.js's native `AsyncLocalStorage` API, the trace ID is transparently stored in the execution thread-context. Downstream database layers, handlers, and formatters automatically retrieve and print the request's `trace_id` without manual parameter drilling:
-
-```json
+<pre><code class="language-json">
 {
   "timestamp": "2026-07-11T14:05:07.500Z",
   "level": "info",
@@ -45,13 +40,10 @@ Each incoming HTTP request intercepts a newly generated UUID v4 assigned as `tra
   "status": 200,
   "duration_ms": 12
 }
-
-```
+</code></pre>
 
 ### 3. Prometheus Metrics
-
 The application exposes a standard `/metrics` endpoint with data formatted in the Prometheus plain-text exposition format:
-
 * `http_requests_total` (Counter): Tracks total requests received with labels: `method`, `status_code`.
 * `events_generated_total` (Counter): Tracks background mock events generated with labels: `animal`, `severity`.
 * `active_animals_gauge` (Gauge): Tracks the current number of distinct active animals present in the database.
@@ -61,16 +53,14 @@ The application exposes a standard `/metrics` endpoint with data formatted in th
 ## Getting Started
 
 ### Local Setup
-
 Ensure you have Node.js (v18+ or v20+ recommended) and npm installed.
 
 1. **Clone the Repository**:
-```bash
-git clone [https://github.com/saiyasaswi-685/bug-zoo-simulator.git](https://github.com/saiyasaswi-685/bug-zoo-simulator.git)
-cd bug-zoo-simulator
+   ```bash
+   git clone [https://github.com/saiyasaswi-685/bug-zoo-simulator.git](https://github.com/saiyasaswi-685/bug-zoo-simulator.git)
+   cd bug-zoo-simulator
 
 ```
-
 
 2. **Install Dependencies**:
 ```bash
@@ -133,66 +123,27 @@ The background simulation engine ticks on an interval controlled by the `SIMULAT
 
 
 * **Response (`HTTP 200 OK`)**:
-```json
-[
-  {
-    "id": "c6f3d99c-e72e-4b20-abf2-736b412bc4f9",
-    "timestamp": "2026-07-11T14:12:05.097Z",
-    "animal": "Tarantula",
-    "message": "glass enclosure panel cracked!",
-    "severity": "ERROR"
-  }
-]
-
-```
-
 
 * **Validation Failure (`HTTP 400 Bad Request`)**:
 If an invalid severity parameter value is passed (e.g., `?severity=FATAL`):
-```json
-{
-  "error": "Invalid severity value: 'FATAL'. Must be one of: INFO, WARN, ERROR."
-}
-
-```
-
-
 
 ### 2. Retrieve Aggregated Statistics
 
 * **Endpoint**: `GET /stats`
 * **Response (`HTTP 200 OK`)**:
-```json
-{
-  "animal_counts": {
-    "Lion": 15,
-    "Tarantula": 4,
-    "Zebra": 8
-  },
-  "severity_counts": {
-    "INFO": 19,
-    "WARN": 6,
-    "ERROR": 2
-  }
-}
-
-```
-
-
 
 ### 3. Expose Metrics for Scraping
 
 * **Endpoint**: `GET /metrics`
 * **Content-Type**: `text/plain; version=0.0.4`
 * **Response Payload Example**:
+
 ```text
 # HELP http_requests_total Total number of HTTP requests processed
 # TYPE http_requests_total counter
 http_requests_total{method="GET",status_code="200"} 42
 
 ```
-
-
 
 ---
 
@@ -208,8 +159,8 @@ docker-compose up --build
 
 
 2. **Exposed Cluster Endpoints**:
-* **API Live Server**: [http://localhost:3000](http://localhost:3000)
-* **Prometheus Dashboard Gateway**: [http://localhost:9090](http://localhost:9090)
+* **API Live Server**: [http://localhost:3000](https://www.google.com/search?q=http://localhost:3000)
+* **Prometheus Dashboard Gateway**: [http://localhost:9090](https://www.google.com/search?q=http://localhost:9090)
 
 
 3. **Production Hardening Specifications**:
